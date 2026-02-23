@@ -1,8 +1,11 @@
 // в джаве получше кнш будет
-function calculateArea(shape: "circle", radius: number): number;
-function calculateArea(shape: "square", side: number): number;
+export function calculateArea(shape: "circle", radius: number): number;
+export function calculateArea(shape: "square", side: number): number;
 
-function calculateArea(shape: "circle" | "square", param1: number): number {
+export function calculateArea(
+	shape: "circle" | "square",
+	param1: number,
+): number {
 	if (shape === "circle") {
 		return Math.PI * param1 ** 2;
 	} else {

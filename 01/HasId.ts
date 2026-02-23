@@ -2,7 +2,10 @@ interface HasId {
 	id: number;
 }
 
-function findById<T extends HasId>(items: T[], id: number): T | undefined {
+export function findById<T extends HasId>(
+	items: T[],
+	id: number,
+): T | undefined {
 	for (const item of items) {
 		if (item.id === id) return item;
 	}
@@ -17,7 +20,7 @@ interface Book1 extends HasId {
 	genre: "fiction" | "non-fiction";
 }
 
-function createBook2(book: Book1): Book1 {
+export function createBook2(book: Book1): Book1 {
 	return { ...book };
 }
 

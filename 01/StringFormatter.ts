@@ -1,11 +1,11 @@
-type StringFormatter = (str: string, uppercase?: boolean) => string;
+type StringFormatter = (str: string, uppercase?: boolean) => string; //типо как функцион интерфейс в java
 
-const capitalizeFirst: StringFormatter = (str, uppercase = false) => {
+export const capitalizeFirst: StringFormatter = (str, uppercase = false) => {
 	const result = str[0].toUpperCase() + str.slice(1);
 	return uppercase ? result.toUpperCase() : result;
 };
 
-const spaceDelete: StringFormatter = (str, uppercase = false) => {
+export const spaceDelete: StringFormatter = (str, uppercase = false) => {
 	const result = str.trim();
 	return uppercase ? result.toUpperCase() : result;
 };

@@ -5,7 +5,7 @@ interface User {
 	isActive: boolean; //живой типо?
 }
 
-function createUser(id: number, name: string, email?: string): User {
+export function createUser(id: number, name: string, email?: string): User {
 	return {
 		id,
 		name,

@@ -1,6 +1,6 @@
 type Status = "active" | "inactive" | "new";
 
-function getStatusColor(status: Status): string {
+export function getStatusColor(status: Status): string {
 	switch (status) {
 		case "active":
 			return "blue";
