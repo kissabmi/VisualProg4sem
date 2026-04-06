@@ -4,3 +4,5 @@ export interface Task {
 	description: string;
 	status: boolean;
 }
+
+export type FilterType = "all" | "done" | "notDone";

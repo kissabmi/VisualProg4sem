@@ -1,0 +1,49 @@
+body {
+  font-family: sans-serif;
+  margin: 20px;
+  background-color: #1d151595;
+  color: #ffffffac;
+}
+
+.app {
+  max-width: 600px;
+  margin: 200px auto;
+  background: rgba(212, 114, 245, 0.565);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.task-form, .search-filters, .task-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+.task-item.done {
+  opacity: 0.6;
+}
+.task-item.done .task-name {
+  text-decoration: line-through;
+}
+
+.task-content {
+  margin: 5px 0;
+}
+
+.filter-buttons {
+  margin-top: 10px;
+}
+
+button {
+  cursor: pointer;
+  padding: 5px 10px;
+  margin-right: 5px;
+}
+
+input[type="text"] {
+  padding: 5px;
+  margin-bottom: 5px;
+  width: calc(100% - 14px);
+}
