@@ -1,68 +1,164 @@
-/* сброс отступов */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    font-family: system-ui, -apple-system, sans-serif;
-    background: #f4f4f9;
-    color: #333;
-}
-
-/* сетка книг (горизонтально с переносом) */
-.books-container {
+    background: #e0e0e0; /* фон вне телефона */
     display: flex;
-    flex-wrap: wrap; /* вот тут перенос если не влезает */
-    gap: 20px;
-    padding: 20px;
     justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
-/* сама карточка */
-.book-card {
-    background: white;
-    padding: 16px;
-    border-radius: 12px;
-    width: 220px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+/* контейнер всего приложения, имитация мобилки */
+.app-container {
+    width: 360px;
+    height: 700px;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: background 0.5s ease;
+    color: white;
+}
+
+/* светлая тема для "дня" */
+.theme-day {
+    background: linear-gradient(to bottom, #5471F1, #7094FF);
+}
+
+/* темная тема для "ночи" */
+.theme-night {
+    background: linear-gradient(to bottom, #0E163B, #1B2857);
+}
+
+.weather-card {
+    padding: 30px 20px;
+    height: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.cover-wrapper {
-    width: 100%;
-    height: 260px;
-    background: #eaeaea;
-    border-radius: 8px;
-    margin-bottom: 12px;
+/* шапка с селектом */
+.header {
     display: flex;
-    align-items: center;
     justify-content: center;
-    overflow: hidden;
+    margin-bottom: 20px;
 }
 
-.cover {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.city-select {
+    background: transparent;
+    color: white;
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    outline: none;
+    text-align: center;
+    cursor: pointer;
 }
 
-.no-cover {
-    color: #888;
+.city-select option {
+    color: black;
+}
+
+/* текущая погода */
+.current-weather {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.temp-info h2 {
+    font-size: 64px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.temp-info .desc {
+    font-size: 18px;
+    opacity: 0.8;
+}
+
+.big-icon {
+    width: 100px;
+    height: 100px;
+    /* легкое свечение для иконки солнца/луны */
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));
+}
+
+/* почасовой прогноз */
+.hourly-forecast {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.hourly-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     font-size: 14px;
 }
 
-/* требования: шрифт названия должен быть больше чем у авторов */
-.title {
-    font-size: 18px; /* крупно */
-    font-weight: 700;
-    margin-bottom: 6px;
-    line-height: 1.3;
+.hourly-item img {
+    width: 40px;
+    margin: 5px 0;
 }
 
-.authors {
-    font-size: 14px; /* меньше чем название */
-    color: #666;
+/* доп инфа: ветер, влажность и тд */
+.details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.detail-item span {
+    opacity: 0.7;
+    margin-bottom: 5px;
+}
+
+.detail-item strong {
+    font-size: 14px;
+}
+
+/* прогноз по дням */
+.daily-forecast {
+    background: rgba(0, 0, 0, 0.2); /* полупрозрачная плашка снизу */
+    border-radius: 20px;
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.daily-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 15px;
+}
+
+.daily-temp {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.night-temp {
+    opacity: 0.6;
 }
