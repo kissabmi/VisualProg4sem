@@ -1,96 +1,113 @@
-import { useEffect, useState } from "react";
-import BookCard from "./BookCard";
+import { useState, useEffect } from "react";
+import { CITIES } from "./mockData";
+import { fetchWeatherData } from "./api";
 
-// тип ответа от api
-interface bookdata {
-	id: number;
-	title: string;
-	isbn: string;
-	pageCount: number;
-	authors: string[];
-}
+import { CurrentWeather } from "./components/CurrentWeather";
+import { HourlyForecast } from "./components/HourlyForecast";
+import { WeatherDetails } from "./components/WeatherDetails";
+import { DailyForecast } from "./components/DailyForecast";
 
-// то как будем хранить у себя
-export interface book {
-	id: number;
-	title: string;
-	authors: string[];
-	coverblob: Blob | null;
-}
+// Типы для стейта шоб TS не ругался
+type WeatherState = {
+    current: { temp: number; description: string; icon: string; humidity: number; wind: number; pressure: number; airPollution: number };
+    hourly: { time: string; temp: number; icon: string }[];
+    daily: { day: string; tempDay: number; tempNight: number; icon: string }[];
+} | null;
 
 export function App() {
-	const [books, setbooks] = useState<book[]>([]);
-	const [loading, setloading] = useState(true);
+    const [city, setCity] = useState<string>(CITIES[0]);
+    const [weather, setWeather] = useState<WeatherState>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-	useEffect(() => {
-		// основная функция загрузки
-		async function loadbooks() {
-			try {
-				// берем список книг
-				const res = await fetch("https://fakeapi.extendsclass.com/books");
-				const data: bookdata[] = await res.json();
+    useEffect(() => {
+        let mounted = true;
 
-				// параллельно качаем все обложки
-				const promises = data.map(async (item) => {
-					let blob: Blob | null = null;
+        async function loadWeather() {
+            setLoading(true);
+            setError(null);
+            try {
+                const data = await fetchWeatherData(city);
+                if (mounted) setWeather(data);
+            } catch (err: any) {
+                if (mounted) setError(err.message || "Ошибка загрузки");
+            } finally {
+                if (mounted) setLoading(false);
+            }
+        }
 
-					try {
-						// ищем по isbn
-						const gres = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${item.isbn}`);
-						const gdata = await gres.json();
+        loadWeather();
 
-						// если нашли картинку
-						if (gdata.items && gdata.items[0]?.volumeInfo?.imageLinks?.thumbnail) {
-							// фикс на всякий случай для https
-							const thumburl = gdata.items[0].volumeInfo.imageLinks.thumbnail.replace("http:", "https:");
-							
-							// грузим картинку (blob) через прокси из-за cors
-							const proxyurl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(thumburl);
-							const imgres = await fetch(proxyurl);
-							if (imgres.ok) {
-								blob = await imgres.blob();
-							}
-						}
-					} catch (e) {
-						// если че пошло не так, просто пропускаем
-						console.error("косяк с обложкой " + item.title, e);
-					}
+        // обновление каждые 3 часа
+        const interval = setInterval(() => {
+            loadWeather();
+        }, 3 * 60 * 60 * 1000);
 
-					return {
-						id: item.id,
-						title: item.title,
-						authors: item.authors || [],
-						coverblob: blob,
-					};
-				});
+        return () => {
+            mounted = false;
+            clearInterval(interval);
+        };
+    }, [city]);
 
-				const result = await Promise.all(promises);
-				setbooks(result);
-			} catch (e) {
-				console.error("вообще ничего не загрузилось", e);
-			} finally {
-				setloading(false);
-			}
-		}
+    const getIconUrl = (icon: string) => `https://openweathermap.org/img/wn/${icon}@2x.png`;
 
-		loadbooks();
-	}, []);
+    if (loading) return <div className="app-container theme-day" style={{color: 'black'}}><div className="weather-card">Загрузка...</div></div>;
 
-	if (loading) {
-		return <div style={{ padding: "20px" }}>грузим книжки...</div>;
-	}
+    // если апишка выдает ошибку (чаще всего 401 пока ключ не активируется)
+    if (error || !weather) return (
+        <div className="app-container theme-day">
+            <div className="weather-card">
+                <div className="header">
+                    <select value={city} onChange={(e) => setCity(e.target.value)} className="city-select">
+                        {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                </div>
+                <div style={{marginTop: '20px', textAlign: 'center'}}>
+                    <p>Ошибка API:</p>
+                    <p style={{color: '#ffcccc'}}>{error}</p>
+                    <p style={{fontSize: '12px', marginTop: '10px'}}>мб ключ еще не активен</p>
+                </div>
+            </div>
+        </div>
+    );
 
-	return (
-		<div className="books-container">
-			{books.length === 0 && <div>книг нет :(</div>}
-			{books.map((b) => (
-				<BookCard
-					key={b.id}
-					title={b.title}
-					authors={b.authors}
-					cover={b.coverblob}
-				/>
-			))}
-		</div>
-	);
+    const isNightNow = weather.current.icon.endsWith("n");
+    const themeClass = isNightNow ? "theme-night" : "theme-day";
+
+    return (
+        <div className={`app-container ${themeClass}`}>
+            <div className="weather-card">
+
+                <div className="header">
+                    <select value={city} onChange={(e) => setCity(e.target.value)} className="city-select">
+                        {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                </div>
+
+                <CurrentWeather
+                    temp={weather.current.temp}
+                    description={weather.current.description}
+                    iconUrl={getIconUrl(weather.current.icon)}
+                />
+
+                <HourlyForecast
+                    hourly={weather.hourly}
+                    getIconUrl={getIconUrl}
+                />
+
+                <WeatherDetails
+                    humidity={weather.current.humidity}
+                    wind={weather.current.wind}
+                    pressure={weather.current.pressure}
+                    airPollution={weather.current.airPollution}
+                />
+
+                <DailyForecast
+                    daily={weather.daily}
+                    getIconUrl={getIconUrl}
+                />
+
+            </div>
+        </div>
+    );
 }
