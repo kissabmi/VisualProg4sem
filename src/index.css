@@ -6,14 +6,13 @@
 }
 
 body {
-    background: #e0e0e0; /* фон вне телефона */
+    background: #e0e0e0;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
 }
 
-/* контейнер всего приложения, имитация мобилки */
 .app-container {
     width: 360px;
     height: 700px;
@@ -24,12 +23,10 @@ body {
     color: white;
 }
 
-/* светлая тема для "дня" */
 .theme-day {
     background: linear-gradient(to bottom, #5471F1, #7094FF);
 }
 
-/* темная тема для "ночи" */
 .theme-night {
     background: linear-gradient(to bottom, #0E163B, #1B2857);
 }
@@ -41,7 +38,6 @@ body {
     flex-direction: column;
 }
 
-/* шапка с селектом */
 .header {
     display: flex;
     justify-content: center;
@@ -63,7 +59,6 @@ body {
     color: black;
 }
 
-/* текущая погода */
 .current-weather {
     display: flex;
     justify-content: space-between;
@@ -85,11 +80,9 @@ body {
 .big-icon {
     width: 100px;
     height: 100px;
-    /* легкое свечение для иконки солнца/луны */
     filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));
 }
 
-/* почасовой прогноз */
 .hourly-forecast {
     display: flex;
     justify-content: space-between;
@@ -110,7 +103,6 @@ body {
     margin: 5px 0;
 }
 
-/* доп инфа: ветер, влажность и тд */
 .details {
     display: flex;
     justify-content: space-between;
@@ -134,9 +126,8 @@ body {
     font-size: 14px;
 }
 
-/* прогноз по дням */
 .daily-forecast {
-    background: rgba(0, 0, 0, 0.2); /* полупрозрачная плашка снизу */
+    background: rgba(0, 0, 0, 0.2); 
     border-radius: 20px;
     padding: 15px;
     flex-grow: 1;

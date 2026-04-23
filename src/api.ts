@@ -9,11 +9,11 @@ export async function fetchWeatherData(city: string) {
     // 1. Geocoding API: получаем координаты города
     const geoRes = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`);
     const geoData = await geoRes.json();
-    
+
     if (geoData.cod && geoData.message) {
-        throw new Error(geoData.message); 
+        throw new Error(geoData.message);
     }
-    
+
     if (!geoData || geoData.length === 0) {
         throw new Error("Город не найден");
     }
@@ -35,7 +35,7 @@ export async function fetchWeatherData(city: string) {
 
     // Парсим текущую погоду (берем первый элемент из прогноза как текущую)
     const currentItem = forecastData.list[0];
-    
+
     // Парсим Air pollution (AQI: 1 = Good, 2 = Fair, 3 = Moderate, 4 = Poor, 5 = Very Poor)
     const aqi = pollutionData.list?.[0]?.main?.aqi || 1;
 
@@ -69,7 +69,7 @@ export async function fetchWeatherData(city: string) {
     const daily = Array.from(dailyMap.entries()).slice(1, 6).map(([date, items]: [string, any[]]) => {
         // Найдем дневную температуру (макс) и ночную (мин)
         const temps = items.map(i => i.main.temp);
-        const icon = items[Math.floor(items.length / 2)].weather[0].icon.replace('n', 'd'); // дневная иконка по умолчанию
+        const icon = items[Math.floor(items.length / 2)].weather[0].icon.replace('n', 'd');
 
         // Получаем название дня недели
         const dayObj = new Date(date);
